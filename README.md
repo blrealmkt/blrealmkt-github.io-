@@ -909,7 +909,7 @@
             "Buenos días, <strong>[Nombre]</strong>. Mi nombre es <strong>[Tu nombre]</strong>,
             soy asesor de BL Real Estate. Te contacto porque estamos lanzando
             <strong>Arcana Fraccionamiento</strong>, un desarrollo residencial privado
-            en Guadalajara con pre-ventas desde <strong>$2.8 MDP</strong> y
+            en Guadalajara con pre-ventas desde <strong>$1.8 MDP</strong> y
             una plusvalía proyectada del <strong>18 % anual</strong>.
             Cuéntame, ¿estás evaluando opciones de inversión o de vivienda propia en este momento?"
           </div>
@@ -967,8 +967,8 @@
           <div class="obj-body">
             <div class="obj-a">
               "Muchos de nuestros clientes también lo pensaron al inicio.
-              Tenemos esquemas de crédito hipotecario desde <strong>$8,500 / mes</strong>,
-              y enganche diferido a 24 meses. ¿Me permites que te muestre cómo
+              Tenemos esquemas de crédito hipotecario desde <strong>$9,500 / mes</strong>,
+              y enganche diferido a 12 meses. ¿Me permites que te muestre cómo
               se ajusta a tus números actuales?"
             </div>
           </div>
