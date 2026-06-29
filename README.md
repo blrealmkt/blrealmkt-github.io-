@@ -43,7 +43,7 @@ body {
   text-transform: uppercase;
   margin: 0;
   line-height: 1;
-  white-space: nowrap; /* Asegura un solo renglón */
+  white-space: nowrap; /* Un solo renglón garantizado */
 }
 .header-section h1 span { color: var(--fire); }
 .header-section p {
@@ -101,7 +101,7 @@ body {
   opacity: 0.8;
 }
 
-/* ── CONTENEDOR CANVAS OPTIMIZADO PARA LIENZO MÓVIL VERTICAL ── */
+/* ── CONTENEDOR CANVAS LIENZO INFINITO TÁCTIL ── */
 .canvas-frame-container {
   width: 100%;
   height: 72vh;
@@ -116,22 +116,6 @@ body {
 }
 .canvas-frame-container:active {
   cursor: grabbing;
-}
-
-/* REGLAS NATIVAS PARA PANTALLA COMPLETA EXCLUSIVA DE LA TABLA */
-.canvas-frame-container:fullscreen {
-  width: 100vw;
-  height: 100vh;
-  background: var(--bg2);
-  padding: 15px;
-  overflow: auto;
-}
-.canvas-frame-container:-webkit-full-screen {
-  width: 100vw;
-  height: 100vh;
-  background: var(--bg2);
-  padding: 15px;
-  overflow: auto;
 }
 
 .viewport-scaler-area {
@@ -249,38 +233,69 @@ body {
   font-weight: 500;
 }
 
-/* ── PANEL DE ACCIONES ── */
+/* ── CONTROLES PANEL ESTILO GRAFFITI/STREET ── */
 .bracket-controls-panel {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 15px;
+  align-items: center;
+  background: var(--bg3);
+  padding: 12px;
+  border: 3px solid var(--ink);
+  box-shadow: 4px 4px 0 var(--ink);
+  margin-bottom: 15px;
+}
+.zoom-slider-container {
   display: flex;
-  gap: 8px;
-  margin-bottom: 12px;
-  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+.zoom-slider-container label {
+  font-weight: 900;
+  text-transform: uppercase;
+  font-size: 13px;
+}
+.123klan-slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 10px;
+  background: var(--white);
+  border: 2px solid var(--ink);
+  outline: none;
+}
+.123klan-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  background: var(--fire);
+  border: 2px solid var(--ink);
+  cursor: pointer;
+  box-shadow: 1px 1px 0 var(--ink);
 }
 .bracket-ctrl-btn {
   font-family: var(--font-display);
   font-weight: 900;
-  font-size: 12px;
-  letter-spacing: .04em;
+  font-size: 13px;
   text-transform: uppercase;
-  background: var(--ink);
+  background: var(--fire-dark);
   color: #fff;
-  border: none;
-  padding: 8px 14px;
+  border: 2px solid var(--ink);
+  padding: 8px 16px;
   cursor: pointer;
-  box-shadow: 2px 2px 0 var(--fire);
+  box-shadow: 2px 2px 0 var(--ink);
 }
 .bracket-ctrl-btn:active {
   transform: translate(1px, 1px);
-  box-shadow: 1px 1px 0 var(--fire);
+  box-shadow: 1px 1px 0 var(--ink);
 }
 </style>
 </head>
 <body>
 
-<div class="onboarding-overlay" id=\"onboarding-screen\" onclick=\"closeOnboarding()\">
+<div class="onboarding-overlay" id="onboarding-screen" onclick="closeOnboarding()">
   <div class="pinch-icon">✌️</div>
-  <div class="onboarding-title">Pellizca para hacer Zoom</div>
-  <div class="onboarding-desc">Usa tus dedos para ajustar la escala. Arrastra en cualquier dirección para moverte libremente por las fases de tu quiniela.</div>
+  <div class="onboarding-title">Usa el deslizador o tus dedos</div>
+  <div class="onboarding-desc">Ajusta el zoom para encuadrar los 16 partidos o expandir el cuadro. Arrastra en cualquier dirección para explorar las llaves.</div>
 </div>
 
 <div class="header-section">
@@ -289,8 +304,11 @@ body {
 </div>
 
 <div class="bracket-controls-panel">
-  <button class="bracket-ctrl-btn" onclick="toggleFullscreenCanvas()">Pantalla Completa 📸</button>
-  <button class="bracket-ctrl-btn" style="background:var(--fire-dark);" onclick="resetUserQuiniela()">Reiniciar Quiniela 🔄</button>
+  <div class="zoom-slider-container">
+    <label>Zoom:</label>
+    <input type="range" class="123klan-slider" id="scale-slider" min="0.35" max="1.1" step="0.05" value="0.65" oninput="manualZoomAdjust(this.value)">
+  </div>
+  <button class="bracket-ctrl-btn" onclick="resetUserQuiniela()">Reiniciar 🔄</button>
 </div>
 
 <div class="canvas-frame-container" id="canvas-container-scroll">
@@ -300,7 +318,7 @@ body {
 
 <script>
 const SIMULATOR_DATA = [
-  // ── DIECISEISAVOS DE FINAL
+  // ── DIECISEISAVOS DE FINAL (16 PARTIDOS COMPLETOS)
   { id:73, phase:'dieciseisavos', nextId:89, slot:'home', home:'Sudáfrica', homeFlag:'🇿🇦', away:'Canadá', awayFlag:'🇨🇦', homeScore:0, awayScore:1, status:'done', date:'28 Jun' },
   { id:74, phase:'dieciseisavos', nextId:89, slot:'away', home:'Alemania', homeFlag:'🇩🇪', fav:'75%', away:'Paraguay', awayFlag:'🇵🇾', homeScore:null, awayScore:null, status:'scheduled', date:'29 Jun' },
   { id:75, phase:'dieciseisavos', nextId:90, slot:'home', home:'Países Bajos', homeFlag:'🇳🇱', fav:'50%', away:'Marruecos', awayFlag:'🇲🇦', homeScore:null, awayScore:null, status:'scheduled', date:'29 Jun' },
@@ -318,7 +336,7 @@ const SIMULATOR_DATA = [
   { id:87, phase:'dieciseisavos', nextId:96, slot:'home', home:'Colombia', homeFlag:'🇨🇴', fav:'70%', away:'Ghana', awayFlag:'🇬🇭', homeScore:null, awayScore:null, status:'scheduled', date:'03 Jul' },
   { id:88, phase:'dieciseisavos', nextId:96, slot:'away', home:'Australia', homeFlag:'🇦🇺', away:'Egipto', awayFlag:'🇪🇬', favAway:'45%', homeScore:null, awayScore:null, status:'scheduled', date:'03 Jul' },
   
-  // ── OCTAVOS DE FINAL
+  // ── OCTAVOS DE FINAL (8 PARTIDOS)
   { id:89, phase:'octavos', nextId:97, slot:'home', home:'Canadá', homeFlag:'🇨🇦', away:'Por definir', awayFlag:'⭐', homeScore:null, awayScore:null, status:'scheduled', date:'04 Jul' },
   { id:90, phase:'octavos', nextId:97, slot:'away', home:'Por definir', homeFlag:'⭐', away:'Por definir', awayFlag:'⭐', homeScore:null, awayScore:null, status:'scheduled', date:'04 Jul' },
   { id:91, phase:'octavos', nextId:98, slot:'home', home:'Por definir', homeFlag:'⭐', away:'Por definir', awayFlag:'⭐', homeScore:null, awayScore:null, status:'scheduled', date:'05 Jul' },
@@ -328,13 +346,13 @@ const SIMULATOR_DATA = [
   { id:95, phase:'octavos', nextId:100, slot:'home', home:'Por definir', homeFlag:'⭐', away:'Por definir', awayFlag:'⭐', homeScore:null, awayScore:null, status:'scheduled', date:'07 Jul' },
   { id:96, phase:'octavos', nextId:100, slot:'away', home:'Por definir', homeFlag:'⭐', away:'Por definir', awayFlag:'⭐', homeScore:null, awayScore:null, status:'scheduled', date:'07 Jul' },
   
-  // ── CUARTOS DE FINAL
+  // ── CUARTOS DE FINAL (4 PARTIDOS)
   { id:97, phase:'cuartos', nextId:101, slot:'home', home:'Ganador M89', homeFlag:'⚽', away:'Ganador M90', awayFlag:'⚽', homeScore:null, awayScore:null, status:'scheduled', date:'09 Jul' },
   { id:98, phase:'cuartos', nextId:101, slot:'away', home:'Ganador M91', homeFlag:'⚽', away:'Ganador M92', awayFlag:'⚽', homeScore:null, awayScore:null, status:'scheduled', date:'10 Jul' },
   { id:99, phase:'cuartos', nextId:102, slot:'home', home:'Ganador M93', homeFlag:'⚽', away:'Ganador M94', awayFlag:'⚽', homeScore:null, awayScore:null, status:'scheduled', date:'11 Jul' },
   { id:100, phase:'cuartos', nextId:102, slot:'away', home:'Ganador M95', homeFlag:'⚽', away:'Ganador M96', awayFlag:'⚽', homeScore:null, awayScore:null, status:'scheduled', date:'11 Jul' },
   
-  // ── SEMIFINALES
+  // ── SEMIFINALES (2 PARTIDOS)
   { id:101, phase:'semis', nextId:104, slot:'home', home:'Ganador Semis 1', homeFlag:'⚽', away:'Ganador Semis 2', awayFlag:'⚽', homeScore:null, awayScore:null, status:'scheduled', date:'14 Jul' },
   { id:102, phase:'semis', nextId:104, slot:'away', home:'Ganador Semis 3', homeFlag:'⚽', away:'Ganador Semis 4', awayFlag:'⚽', homeScore:null, awayScore:null, status:'scheduled', date:'15 Jul' },
   
@@ -343,12 +361,12 @@ const SIMULATOR_DATA = [
   { id:104, phase:'final', nextId:null, slot:null, home:'Finalista 1', homeFlag:'🌍', away:'Finalista 2', awayFlag:'🌍', homeScore:null, awayScore:null, status:'scheduled', date:'19 Jul' }
 ];
 
-let currentScale = 0.65;
+let globalScaleSetting = 0.65;
 
 function closeOnboarding() {
   document.getElementById('onboarding-screen').classList.add('hidden');
 }
-setTimeout(closeOnboarding, 2800);
+setTimeout(closeOnboarding, 2600);
 
 function render() {
   const container = document.getElementById('render-viewport-area');
@@ -366,18 +384,18 @@ function render() {
       const isAwayWin = isDone && m.awayScore > m.homeScore;
       const isPlaceholder = m.home.includes('Por definir') || m.home.includes('Ganador') || m.home.includes('Finalista') || m.home.includes('Perdedor');
 
-      const favHomeHTML = (m.fav && !isDone) ? `<span class="fav-badge">${m.fav}</span>` : '';
-      const favAwayHTML = (m.favAway && !isDone) ? `<span class="fav-badge">${m.favAway}</span>` : '';
+      const homeFavTag = (m.fav && !isDone) ? `<span class="fav-badge">${m.fav}</span>` : '';
+      const awayFavTag = (m.favAway && !isDone) ? `<span class="fav-badge">${m.favAway}</span>` : '';
 
       html += `
         <div class="bracket-match-node ${isPlaceholder ? 'unresolved-node' : ''}">
           <div class="node-info-row"><span class="node-match-id">M${m.id}</span><span>${m.date}</span></div>
           <div class="team-selectable-row ${isHomeWin ? 'selected-winner' : ''}" onclick="advanceTeam(${m.id}, 'home')">
-            <span>${m.homeFlag || '⭐'} ${m.home} ${favHomeHTML}</span>
+            <span>${m.homeFlag || '⭐'} ${m.home} ${homeFavTag}</span>
             <span class="score-box-display">${m.homeScore !== null ? m.homeScore : '—'}</span>
           </div>
           <div class="team-selectable-row ${isAwayWin ? 'selected-winner' : ''}" onclick="advanceTeam(${m.id}, 'away')">
-            <span>${m.awayFlag || '⭐'} ${m.away} ${favAwayHTML}</span>
+            <span>${m.awayFlag || '⭐'} ${m.away} ${awayFavTag}</span>
             <span class="score-box-display">${m.awayScore !== null ? m.awayScore : '—'}</span>
           </div>
         </div>`;
@@ -385,11 +403,11 @@ function render() {
     html += `</div>`;
   });
   container.innerHTML = html;
-  container.style.transform = `scale(${currentScale})`;
+  container.style.transform = `scale(${globalScaleSetting})`;
 }
 
 function advanceTeam(matchId, side) {
-  if(matchId === 73) return; // Bloquear M73 real de Canadá
+  if(matchId === 73) return; // Forzar bloqueo nativo en el juego de Canadá
   const m = SIMULATOR_DATA.find(x => x.id === matchId);
   if(!m || m.home.includes('Por definir') || m.home.includes('Ganador') || m.home.includes('Finalista')) return;
 
@@ -422,9 +440,14 @@ function advanceTeam(matchId, side) {
   render();
 }
 
+function manualZoomAdjust(val) {
+  globalScaleSetting = parseFloat(val);
+  render();
+}
+
 function resetUserQuiniela() {
   SIMULATOR_DATA.forEach(m => {
-    if(m.id !== 73) { // Limpiar todo excepto Canadá
+    if(m.id !== 73) { // Limpiar predicciones respetando el juego de Canadá
       m.homeScore = null;
       m.awayScore = null;
       m.status = 'scheduled';
@@ -439,44 +462,33 @@ function resetUserQuiniela() {
   render();
 }
 
-function toggleFullscreenCanvas() {
-  const el = document.getElementById('canvas-container-scroll');
-  if (!document.fullscreenElement) {
-    el.requestFullscreen().catch(err => {
-      alert(`Error al activar pantalla completa: ${err.message}`);
-    });
-  } else {
-    document.exitFullscreen();
-  }
-}
-
-// ── SISTEMA DE DESPLAZAMIENTO TÁCTIL ──
-const frame = document.getElementById('canvas-container-scroll');
+// ── SISTEMA DE DESPLAZAMIENTO TÁCTIL (PANEO NATIVO) ──
+const frameContainer = document.getElementById('canvas-container-scroll');
 let isDragging = false; let sx, sy, sLeft, sTop;
 
 const startPan = (e) => {
   isDragging = true;
   const x = e.pageX || e.touches[0].pageX;
   const y = e.pageY || e.touches[0].pageY;
-  sx = x - frame.offsetLeft;
-  sy = y - frame.offsetTop;
-  sLeft = frame.scrollLeft; sTop = frame.scrollTop;
+  sx = x - frameContainer.offsetLeft;
+  sy = y - frameContainer.offsetTop;
+  sLeft = frameContainer.scrollLeft; sTop = frameContainer.scrollTop;
 };
-frame.addEventListener('mousedown', startPan);
-frame.addEventListener('touchstart', startPan);
+frameContainer.addEventListener('mousedown', startPan);
+frameContainer.addEventListener('touchstart', startPan);
 
 const movePan = (e) => {
   if(!isDragging) return;
   const x = e.pageX || e.touches[0].pageX;
   const y = e.pageY || e.touches[0].pageY;
-  frame.scrollLeft = sLeft - (x - frame.offsetLeft - sx) * 1.4;
-  frame.scrollTop = sTop - (y - frame.offsetTop - sy) * 1.4;
+  frameContainer.scrollLeft = sLeft - (x - frameContainer.offsetLeft - sx) * 1.4;
+  frameContainer.scrollTop = sTop - (y - frameContainer.offsetTop - sy) * 1.4;
 };
-frame.addEventListener('mousemove', movePan);
-frame.addEventListener('touchmove', movePan);
+frameContainer.addEventListener('mousemove', movePan);
+frameContainer.addEventListener('touchmove', movePan);
 
 window.addEventListener('mouseup', () => isDragging = false);
-frame.addEventListener('touchend', () => isDragging = false);
+frameContainer.addEventListener('touchend', () => isDragging = false);
 
 render();
 </script>
