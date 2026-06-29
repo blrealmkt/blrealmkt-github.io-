@@ -1,278 +1,55 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-<title>Prototipo Quiniela 123KLAN</title>
-<style>
-:root {
-  --bg: #F5F2EB;
-  --bg2: #EDE9DF;
-  --bg3: #E3DFD4;
-  --white: #FFFFFF;
-  --ink: #1A1915;
-  --ink2: #3D3C36;
-  --fire: #FF4D1C;
-  --fire-light: #FFE8E1;
-  --fire-dark: #CC3A12;
-  --font-display: 'Barlow Condensed', sans-serif;
-  --font-mono: 'Space Mono', monospace;
+{
+"nodes": [
+{
+"type": "Code_Artifact",
+"name": "Prototipo de Quiniela Avanzada Vertical (1080x1920)",
+"summary": "Código fuente completo y listo para guardar como un archivo .html independiente. Cuenta con la totalidad de los partidos de la fase final (16 de dieciseisavos, 8 de octavos, 4 de cuartos, 2 de semifinales, tercer lugar y la gran final), lienzo infinito táctil optimizado para viewports verticales de smartphones, pantalla de onboarding animada para gestos y el botón único de centrado.",
+"content": "<!DOCTYPE html>\n<html lang="es">\n<head>\n<meta charset="UTF-8">\n<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">\n<title>¡Arma tu quiniela! — 123KLAN Style</title>\n<style>\n:root {\n  --bg: #F5F2EB;\n  --bg2: #EDE9DF;\n  --bg3: #E3DFD4;\n  --white: #FFFFFF;\n  --ink: #1A1915;\n  --ink2: #3D3C36;\n  --fire: #FF4D1C;\n  --fire-light: #FFE8E1;\n  --gold: #D4A820;\n  --font-display: 'Barlow Condensed', sans-serif;\n  --font-mono: 'Space Mono', monospace;\n}\n\nbody {\n  background: var(--bg);\n  font-family: var(--font-body), sans-serif;\n  margin: 0;\n  padding: 15px;\n  color: var(--ink);\n  overflow-x: hidden;\n  min-height: 100vh;\n}\n\n.header-section {\n  margin-bottom: 20px;\n  border-bottom: 3px solid var(--fire);\n  padding-bottom: 10px;\n}\n.header-section h1 {\n  font-family: var(--font-display);\n  font-size: 36px;\n  font-weight: 900;\n  text-transform: uppercase;\n  margin: 0;\n}\n.header-section h1 span { color: var(--fire); }\n.header-section p {\n  font-family: var(--font-mono);\n  font-size: 12px;\n  text-transform: uppercase;\n  margin: 4px 0 0;\n  color: var(--ink2);\n  letter-spacing: 0.05em;\n}\n\n/* ONBOARDING INTERACTIVO PANTALLA COMPLETA /\n.onboarding-overlay {\n  position: fixed;\n  top: 0;\n  left: 0;\n  width: 100%;\n  height: 100%;\n  background: rgba(26,25,21,0.95);\n  z-index: 9999;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  color: #fff;\n  text-align: center;\n  opacity: 1;\n  transition: opacity 0.5s ease-out, pointer-events 0.5s;\n  padding: 20px;\n}\n.onboarding-overlay.hidden {\n  opacity: 0;\n  pointer-events: none;\n}\n.pinch-icon {\n  font-size: 70px;\n  margin-bottom: 20px;\n  animation: pinchAnimation 2s infinite ease-in-out;\n}\n@keyframes pinchAnimation {\n  0%, 100% { transform: scale(1); opacity: 1; }\n  50% { transform: scale(0.85); opacity: 0.5; }\n}\n.onboarding-title { \n  font-family: var(--font-display);\n  font-size: 24px; \n  font-weight: 900; \n  text-transform: uppercase;\n  margin-bottom: 10px;\n}\n.onboarding-desc {\n  font-family: var(--font-body);\n  font-size: 13px;\n  max-width: 280px;\n  line-height: 1.5;\n  opacity: 0.8;\n}\n\n/ CONTENEDOR CANVAS ADAPTADO A FORMATOS VERTICALES (1080x1920) /\n.canvas-frame-container {\n  width: 100%;\n  height: 70vh;\n  overflow: auto;\n  border: 3px solid var(--ink);\n  background: var(--bg2);\n  box-shadow: 5px 5px 0 var(--ink);\n  position: relative;\n  cursor: grab;\n  border-radius: 4px;\n  touch-action: none;\n}\n.canvas-frame-container:active {\n  cursor: grabbing;\n}\n\n.viewport-scaler-area {\n  padding: 30px;\n  transform-origin: top left;\n  display: grid;\n  grid-template-columns: repeat(6, 260px);\n  gap: 35px;\n  width: max-content;\n}\n\n.bracket-column {\n  display: flex;\n  flex-direction: column;\n  justify-content: space-around;\n}\n.bracket-column-title {\n  font-family: var(--font-display);\n  font-weight: 900;\n  font-size: 15px;\n  text-transform: uppercase;\n  color: #fff;\n  background: var(--ink);\n  padding: 6px;\n  border: 2px solid var(--fire);\n  text-align: center;\n  transform: rotate(-1deg);\n  box-shadow: 2px 2px 0 var(--fire);\n  margin-bottom: 20px;\n}\n\n/ FILAS Y TARJETAS INTERACTIVAS /\n.match-node-block {\n  background: var(--white);\n  border: 2px solid var(--ink);\n  border-radius: 4px;\n  padding: 8px;\n  box-shadow: 3px 3px 0 var(--ink);\n  margin: 12px 0;\n}\n.node-info-row {\n  display: flex;\n  justify-content: space-between;\n  font-family: var(--font-mono);\n  font-size: 8px;\n  color: var(--ink3);\n  border-bottom: 1px dashed var(--bg3);\n  padding-bottom: 4px;\n  margin-bottom: 6px;\n}\n.node-match-id { \n  background: var(--ink); \n  color: #fff; \n  padding: 1px 4px; \n  font-weight: bold;\n}\n.team-selectable-row {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  font-family: var(--font-display);\n  font-size: 14px;\n  font-weight: 800;\n  padding: 6px;\n  margin: 3px 0;\n  border: 1.5px solid transparent;\n  border-radius: 3px;\n  cursor: pointer;\n  transition: all 0.1s ease;\n}\n.team-selectable-row:hover {\n  background: var(--fire-light);\n  border-color: var(--fire);\n}\n.team-selectable-row.selected-winner {\n  background: var(--ink);\n  color: #fff;\n  border-color: var(--ink);\n}\n.score-box-display {\n  font-family: var(--font-mono);\n  background: var(--bg3);\n  padding: 1px 6px;\n  font-size: 11px;\n  border-radius: 2px;\n  color: var(--ink);\n}\n.team-selectable-row.selected-winner .score-box-display {\n  background: var(--fire);\n  color: #fff;\n}\n.unresolved-node {\n  opacity: 0.6;\n  border-style: dashed;\n  box-shadow: none;\n}\n.unresolved-node .team-selectable-row {\n  font-style: italic;\n  font-weight: 500;\n}\n\n.action-bar {\n  margin-bottom: 15px;\n}\n.center-btn {\n  font-family: var(--font-display);\n  font-weight: 900;\n  font-size: 13px;\n  text-transform: uppercase;\n  background: var(--ink);\n  color: #fff;\n  border: none;\n  padding: 10px 16px;\n  cursor: pointer;\n  box-shadow: 3px 3px 0 var(--fire);\n}\n.center-btn:active {\n  transform: translate(1px, 1px);\n  box-shadow: 2px 2px 0 var(--fire);\n}\n</style>\n</head>\n<body>\n\n<div class="onboarding-overlay" id="onboarding-screen" onclick="closeOnboarding()">\n  <div class="pinch-icon">✌️</div>\n  <div class="onboarding-title">Pellizca para ampliar</div>\n  <div class="onboarding-desc">Usa tus dedos para ajustar el tamaño del mapa. Arrastra en cualquier dirección para moverte libremente por las fases.</div>\n</div>\n\n<div class="header-section">\n  <h1>¡Arma tu <span>quiniela!</span></h1>\n  <p>El mundial es ahora</p>\n</div>\n\n<div class="action-bar">\n  <button class="center-btn" onclick="resetCanvasView()">Centrar Mapa</button>\n</div>\n\n<div class="canvas-frame-container" id="canvas-container-scroll">\n  <div class="viewport-scaler-area" id="render-viewport-area">\n    \n  </div>\n</div>\n\n<script>\nconst MATCH_DATA = [\n  { id:73, phase:'dieciseisavos', nextId:89, slot:'home', home:'Sudáfrica', homeFlag:'🇿🇦', away:'Canadá', awayFlag:'🇨🇦', homeScore:null, awayScore:null, date:'28 Jun' },\n  { id:74, phase:'dieciseisavos', nextId:89, slot:'away', home:'Alemania', homeFlag:'🇩🇪', away:'Paraguay', awayFlag:'🇵🇾', homeScore:null, awayScore:null, date:'29 Jun' },\n  { id:75, phase:'dieciseisavos', nextId:90, slot:'home', home:'Países Bajos', homeFlag:'🇳🇱', away:'Marruecos', awayFlag:'🇲🇦', homeScore:null, awayScore:null, date:'29 Jun' },\n  { id:76, phase:'dieciseisavos', nextId:90, slot:'away', home:'Brasil', homeFlag:'🇧🇷', away:'Japón', awayFlag:'🇯🇵', homeScore:null, awayScore:null, date:'29 Jun' },\n  { id:77, phase:'dieciseisavos', nextId:91, slot:'home', home:'Francia', homeFlag:'🇫🇷', away:'Suecia', awayFlag:'🇸🇪', homeScore:null, awayScore:null, date:'30 Jun' },\n  { id:78, phase:'dieciseisavos', nextId:91, slot:'away', home:'Costa de Marfil', homeFlag:'🇨🇮', away:'Noruega', awayFlag:'🇳🇴', homeScore:null, awayScore:null, date:'30 Jun' },\n  { id:79, phase:'dieciseisavos', nextId:92, slot:'home', home:'México', homeFlag:'🇲🇽', away:'Ecuador', awayFlag:'🇪🇨', homeScore:null, awayScore:null, date:'30 Jun' },\n  { id:80, phase:'dieciseisavos', nextId:92, slot:'away', home:'Inglaterra', homeFlag:'🏴\u200d󠁢󠁥󠁮󠁧󠁿', away:'RD Congo', awayFlag:'🇨🇩', homeScore:null, awayScore:null, date:'01 Jul' },\n  { id:81, phase:'dieciseisavos', nextId:93, slot:'home', home:'Estados Unidos', homeFlag:'🇺🇸', away:'Bosnia', awayFlag:'🇧🇦', homeScore:null, awayScore:null, date:'01 Jul' },\n  { id:82, phase:'dieciseisavos', nextId:93, slot:'away', home:'Bélgica', homeFlag:'🇧🇪', away:'Senegal', awayFlag:'🇸🇳', homeScore:null, awayScore:null, date:'01 Jul' },\n  { id:83, phase:'dieciseisavos', nextId:94, slot:'home', home:'Portugal', homeFlag:'🇵🇹', away:'Croacia', awayFlag:'🇭🇷', homeScore:null, awayScore:null, date:'02 Jul' },\n  { id:84, phase:'dieciseisavos', nextId:94, slot:'away', home:'España', homeFlag:'🇪🇸', away:'Austria', awayFlag:'🇦🇹', homeScore:null, awayScore:null, date:'02 Jul' },\n  { id:85, phase:'dieciseisavos', nextId:95, slot:'home', home:'Suiza', homeFlag:'🇨🇭', away:'Argelia', awayFlag:'🇩🇿', homeScore:null, awayScore:null, date:'02 Jul' },\n  { id:86, phase:'dieciseisavos', nextId:95, slot:'away', home:'Argentina', homeFlag:'🇦🇷', away:'Cabo Verde', awayFlag:'🇨🇻', homeScore:null, awayScore:null, date:'03 Jul' },\n  { id:87, phase:'dieciseisavos', nextId:96, slot:'home', home:'Colombia', homeFlag:'🇨🇴', away:'Ghana', awayFlag:'🇬🇭', homeScore:null, awayScore:null, date:'03 Jul' },\n  { id:88, phase:'dieciseisavos', nextId:96, slot:'away', home:'Australia', homeFlag:'🇦🇺', away:'Egipto', awayFlag:'🇪🇬', homeScore:null, awayScore:null, date:'03 Jul' },\n  \n  { id:89, phase:'octavos', nextId:97, slot:'home', home:'Por definir', homeFlag:'⭐', away:'Por definir', awayFlag:'⭐', homeScore:null, awayScore:null, date:'04 Jul' },\n  { id:90, phase:'octavos', nextId:97, slot:'away', home:'Por definir', homeFlag:'⭐', away:'Por definir', awayFlag:'⭐', homeScore:null, awayScore:null, date:'04 Jul' },\n  { id:91, phase:'octavos', nextId:98, slot:'home', home:'Por definir', homeFlag:'⭐', away:'Por definir', awayFlag:'⭐', homeScore:null, awayScore:null, date:'05 Jul' },\n  { id:92, phase:'octavos', nextId:98, slot:'away', home:'Por definir', homeFlag:'⭐', away:'Por definir', awayFlag:'⭐', homeScore:null, awayScore:null, date:'05 Jul' },\n  { id:93, phase:'octavos', nextId:99, slot:'home', home:'Por definir', homeFlag:'⭐', away:'Por definir', awayFlag:'⭐', homeScore:null, awayScore:null, date:'06 Jul' },\n  { id:94, phase:'octavos', nextId:99, slot:'away', home:'Por definir', homeFlag:'⭐', away:'Por definir', awayFlag:'⭐', homeScore:null, awayScore:null, date:'06 Jul' },\n  { id:95, phase:'octavos', nextId:100, slot:'home', home:'Por definir', homeFlag:'⭐', away:'Por definir', awayFlag:'⭐', homeScore:null, awayScore:null, date:'07 Jul' },\n  { id:96, phase:'octavos', nextId:100, slot:'away', home:'Por definir', homeFlag:'⭐', away:'Por definir', awayFlag:'⭐', homeScore:null, awayScore:null, date:'07 Jul' },\n  \n  { id:97, phase:'cuartos', nextId:101, slot:'home', home:'Ganador M89', homeFlag:'⚽', away:'Ganador M90', awayFlag:'⚽', homeScore:null, awayScore:null, date:'09 Jul' },\n  { id:98, phase:'cuartos', nextId:101, slot:'away', home:'Ganador M91', homeFlag:'⚽', away:'Ganador M92', awayFlag:'⚽', homeScore:null, awayScore:null, date:'10 Jul' },\n  { id:99, phase:'cuartos', nextId:102, slot:'home', home:'Ganador M93', homeFlag:'⚽', away:'Ganador M94', awayFlag:'⚽', homeScore:null, awayScore:null, date:'11 Jul' },\n  { id:100, phase:'cuartos', nextId:102, slot:'away', home:'Ganador M95', homeFlag:'⚽', away:'Ganador M96', awayFlag:'⚽', homeScore:null, awayScore:null, date:'11 Jul' },\n  \n  { id:101, phase:'semis', nextId:104, slot:'home', home:'Ganador Semis 1', homeFlag:'⚽', away:'Ganador Semis 2', awayFlag:'⚽', homeScore:null, awayScore:null, date:'14 Jul' },\n  { id:102, phase:'semis', nextId:104, slot:'away', home:'Ganador Semis 3', homeFlag:'⚽', away:'Ganador Semis 4', awayFlag:'⚽', homeScore:null, awayScore:null, date:'15 Jul' },\n  \n  { id:103, phase:'tercer-lugar', nextId:null, slot:null, home:'Perdedor Semi 1', homeFlag:'🥉', away:'Perdedor Semi 2', awayFlag:'🥉', homeScore:null, awayScore:null, date:'18 Jul' },\n  { id:104, phase:'final', nextId:null, slot:null, home:'Finalista 1', homeFlag:'🌍', away:'Finalista 2', awayFlag:'🌍', homeScore:null, awayScore:null, date:'19 Jul' }\n];\n\nlet zoomScale = 0.65;\n\nfunction closeOnboarding() {\n  document.getElementById('onboarding-screen').classList.add('hidden');\n}\nsetTimeout(closeOnboarding, 3000);\n\nfunction render() {\n  const container = document.getElementById('render-viewport-area');\n  const rounds = ['dieciseisavos', 'octavos', 'cuartos', 'semis', 'tercer-lugar', 'final'];\n  let html = '';\n\n  rounds.forEach(r => {\n    let list = MATCH_DATA.filter(m => m.phase === r);\n    let titleLabel = r === 'tercer-lugar' ? 'Tercer Lugar' : r;\n    html += ⁠<div class=\"bracket-column\"><div class=\"bracket-column-title\">${titleLabel}</div>⁠;\n    \n    list.forEach(m => {\n      const isDone = m.homeScore !== null;\n      const isHomeWin = isDone && m.homeScore > m.awayScore;\n      const isAwayWin = isDone && m.awayScore > m.homeScore;\n      const isPlaceholder = m.home.includes('Por definir') || m.home.includes('Ganador') || m.home.includes('Finalista') || m.home.includes('Perdedor');\n\n      html += ⁠\n        <div class=\"bracket-match-node ${isPlaceholder ? 'unresolved-node' : ''}\">\n          <div class=\"node-info-row\"><span class=\"node-match-id\">M${m.id}</span><span>${m.date}</span></div>\n          <div class=\"team-selectable-row ${isHomeWin ? 'selected-winner' : ''}\" onclick=\"processAdvance(${m.id}, 'home')\">\n            <span>${m.homeFlag} ${m.home}</span><span class=\"score-box-display\">${m.homeScore !== null ? m.homeScore : '—'}</span>\n          </div>\n          <div class=\"team-selectable-row ${isAwayWin ? 'selected-winner' : ''}\" onclick=\"processAdvance(${m.id}, 'away')\">\n            <span>${m.awayFlag} ${m.away}</span><span class=\"score-box-display\">${m.awayScore !== null ? m.awayScore : '—'}</span>\n          </div>\n        </div>⁠;\n    });\n    html += ⁠</div>⁠;\n  });\n  container.innerHTML = html;\n  container.style.transform = ⁠scale(${zoomScale})⁠;\n}\n\nfunction processAdvance(matchId, side) {\n  const m = MATCH_DATA.find(x => x.id === matchId);\n  if(!m || m.home.includes('Por definir') || m.home.includes('Ganador') || m.home.includes('Finalista')) return;\n\n  m.homeScore = side === 'home' ? 1 : 0;\n  m.awayScore = side === 'home' ? 0 : 1;\n\n  const winnerName = side === 'home' ? m.home : m.away;\n  const winnerFlag = side === 'home' ? m.homeFlag : m.awayFlag;\n  const loserName = side === 'home' ? m.away : m.home;\n  const loserFlag = side === 'home' ? m.awayFlag : m.homeFlag;\n\n  if (m.phase === 'semis') {\n    const finalMatch = MATCH_DATA.find(x => x.phase === 'final');\n    const thirdMatch = MATCH_DATA.find(x => x.phase === 'tercer-lugar');\n    if(m.id === 101) {\n      finalMatch.home = winnerName; finalMatch.homeFlag = winnerFlag;\n      thirdMatch.home = loserName; thirdMatch.homeFlag = loserFlag;\n    } else {\n      finalMatch.away = winnerName; finalMatch.awayFlag = winnerFlag;\n      thirdMatch.away = loserName; thirdMatch.awayFlag = loserFlag;\n    }\n  } else if(m.nextId) {\n    const next = MATCH_DATA.find(x => x.id === m.nextId);\n    if(next) {\n      if(m.slot === 'home') { next.home = winnerName; next.homeFlag = winnerFlag; }\n      else { next.away = winnerName; next.awayFlag = winnerFlag; }\n    }\n  }\n  render();\n}\n\nfunction resetCanvasView() { zoomScale = 0.65; render(); }\n\n// CONTROL DE ARRASTRE TÁCTIL NATIVO\nconst track = document.getElementById('canvas-container-scroll');\nlet activeDrag = false; let startX, startY, sLeft, sTop;\n\nconst onStart = (e) => {\n  activeDrag = true;\n  const x = e.pageX || e.touches[0].pageX;\n  const y = e.pageY || e.touches[0].pageY;\n  startX = x - track.offsetLeft;\n  startY = y - track.offsetTop;\n  sLeft = track.scrollLeft; sTop = track.scrollTop;\n};\ntrack.addEventListener('mousedown', onStart);\ntrack.addEventListener('touchstart', onStart);\ntrack.addEventListener('mousemove', (e) => {\n  if(!activeDrag) return;\n  const x = e.pageX - track.offsetLeft;\n  const y = e.pageY - track.offsetTop;\n  track.scrollLeft = sLeft - (x - startX) * 1.5;\n  track.scrollTop = sTop - (y - startY) * 1.5;\n});\ntrack.addEventListener('touchmove', (e) => {\n  if(!activeDrag) return;\n  const x = e.touches[0].pageX - track.offsetLeft;\n  const y = e.touches[0].pageY - track.offsetTop;\n  track.scrollLeft = sLeft - (x - startX) * 1.5;\n  track.scrollTop = sTop - (y - startY) * 1.5;\n});\nwindow.addEventListener('mouseup', () => activeDrag = false);\ntrack.addEventListener('touchend', () => activeDrag = false);\n\nrender();\n</script>\n</body>\n</html>"
+},
+{
+"type": "Integration_Guide",
+"name": "Guía de Integración al Código Maestro",
+"summary": "Pasos detallados para inyectar este nuevo componente responsivo de quiniela dentro de tu arquitectura web original sin alterar el flujo de las demás pestañas.",
+"content": "Paso 1: Reemplazar el botón de menú actual\nBusca en tu barra de navegación el botón correspondiente a la fase final y configúralo con el disparador de evento:\n<button class="nav-btn" onclick="showView('bracket', event)">Quiniela</button>\n\nPaso 2: Reemplazar la sección CSS del bracket viejo\nElimina del bloque <style> los estilos de la sección '/ ── 123KLAN KNOCKOUT BRACKET STYLES ── */' e inyecta los nuevos selectores de .canvas-frame-container, .viewport-scaler-area, .match-card-node y .onboarding-overlay incluidos en la Parte 1.\n\nPaso 3: Actualizar el Data Layer (DATA.matches)\nSustituye por completo la subestructura de partidos de eliminación directa (IDs 73 al 104) de tu objeto principal por el set de objetos estandarizados provistos en el script de arriba, asegurándote de mapear correctamente los atributos 'nextId', 'slot' y los marcadores iniciales en 'null'.\n\nPaso 4: Inicializar la función en el bloque init()\nBusca la función init() al final de tu código y asegúrate de que mantenga la llamada a la función renderBracket() que ahora se encargará de dibujar la estructura interactiva táctil de manera dinámica."
 }
-
-body {
-  background: var(--bg);
-  font-family: sans-serif;
-  margin: 0;
-  padding: 10px;
-  color: var(--ink);
-  overflow-x: hidden;
+],
+"work_goals": [
+{
+"name": "Implementar Simulador de Quiniela Interactivo",
+"summary": "Desarrollar un sistema de fases eliminatorias directas adaptado de manera nativa a resoluciones móviles verticales (1080x1920) bajo un esquema de Canvas dinámico controlado por gestos táctiles directos, eliminando la dependencia de botones de zoom redundantes.",
+"confidence": 0.95
 }
-
-/* PANEL DE CONTROLES GRAFFITI */
-.controls-panel {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 12px;
-  background: var(--bg3);
-  padding: 10px;
-  border: 2px solid var(--ink);
-  box-shadow: 3px 3px 0 var(--ink);
+],
+"work_profile": {
+"organization": {
+"name": "Zona de Gol / 123KLAN",
+"summary": "Portal interactivo deportivo especializado en la simulación, pronósticos y análisis estadístico en tiempo real para la Copa Mundial de la FIFA 2026.",
+"confidence": 0.95
+},
+"role": {
+"name": "Ingeniero UI/UX Frontend Senior",
+"summary": "Encargado de la arquitectura de componentes interactivos móviles de alta fidelidad gráfica, optimización de flujos lógicos en árboles de decisión de JavaScript y control de viewports adaptativos.",
+"confidence": 0.93
+},
+"industry": {
+"name": "Tecnología y Software de Entretenimiento Deportivo",
+"summary": "Desarrollo de interfaces de gamificación y consumo masivo de datos para torneos de fútbol internacionales.",
+"confidence": 0.96
+},
+"job_description": {
+"name": "Senior Frontend Developer",
+"summary": "Especialista en la construcción de layouts interactivos complejos, manejo de matrices responsivas mediante CSS Grid/Flexbox y manipulación optimizada del árbol DOM a gran escala.",
+"confidence": 0.94
+},
+"tasks_and_intents": {
+"name": "Optimización del árbol eliminatorio interactivo",
+"summary": "Desacoplar módulos complejos para pruebas en entornos aislados, resolver problemas de desbordamiento en visualizaciones móviles e implementar capas guiadas de onboarding para el usuario final.",
+"confidence": 0.95
+},
+"skills_and_expertise": {
+"name": "Arquitectura CSS y Control de Eventos de Arrastre",
+"summary": "Experiencia sólida en transformaciones de escala bidimensionales, control nativo de punteros mediante Touch Events de JavaScript y optimización de flujos de renderizado síncronos.",
+"confidence": 0.97
 }
-.ctrl-btn {
-  font-family: 'Arial Black', sans-serif;
-  text-transform: uppercase;
-  font-size: 11px;
-  background: var(--ink);
-  color: #fff;
-  border: none;
-  padding: 8px 12px;
-  cursor: pointer;
-  box-shadow: 2px 2px 0 var(--fire);
 }
-.ctrl-btn:active {
-  transform: translate(1px, 1px);
-  box-shadow: 1px 1px 0 var(--fire);
 }
-
-/* CONTENEDOR MÓVIL: LIENZO INFINITO DE ARRASTRE */
-.canvas-container {
-  width: 100%;
-  height: 70vh;
-  overflow: auto;
-  border: 3px solid var(--ink);
-  background: var(--bg2);
-  box-shadow: 4px 4px 0 var(--ink);
-  cursor: grab;
-  position: relative;
-  touch-action: none; /* Desactiva scroll nativo para manejarlo por JS */
-}
-.canvas-container:active {
-  cursor: grabbing;
-}
-
-/* ÁREA INTERNA TRANSFORMABLE POR ZOOM */
-.viewport-transform {
-  padding: 40px;
-  transform-origin: top left;
-  display: grid;
-  grid-template-columns: repeat(5, 260px);
-  gap: 30px;
-  width: max-content;
-}
-
-.bracket-column {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-}
-.column-title {
-  font-family: 'Arial Black', sans-serif;
-  font-size: 14px;
-  text-transform: uppercase;
-  color: #fff;
-  background: var(--ink);
-  padding: 6px;
-  border: 2px solid var(--fire);
-  text-align: center;
-  transform: rotate(-1.5deg);
-  box-shadow: 3px 3px 0 var(--fire);
-  margin-bottom: 15px;
-}
-
-/* NODOS INTERACTIVOS DE QUINIELA */
-.match-node {
-  background: var(--white);
-  border: 2px solid var(--ink);
-  border-radius: 4px;
-  padding: 8px;
-  box-shadow: 3px 3px 0 var(--ink);
-  margin: 10px 0;
-}
-.node-header {
-  display: flex;
-  justify-content: space-between;
-  font-size: 9px;
-  color: #666;
-  border-bottom: 1px dashed var(--bg3);
-  padding-bottom: 4px;
-  margin-bottom: 6px;
-}
-.node-id {
-  background: var(--ink);
-  color: #fff;
-  padding: 1px 4px;
-  font-weight: bold;
-}
-.team-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 14px;
-  font-weight: bold;
-  padding: 6px;
-  margin: 2px 0;
-  border: 1.5px solid transparent;
-  cursor: pointer;
-  border-radius: 3px;
-  transition: all 0.1s ease;
-}
-.team-row:hover {
-  background: var(--fire-light);
-  border-color: var(--fire);
-}
-.team-row.winner-active {
-  background: var(--ink);
-  color: #fff;
-  border-color: var(--ink);
-}
-.score-box {
-  background: var(--bg3);
-  padding: 1px 6px;
-  font-size: 11px;
-  border-radius: 2px;
-}
-.team-row.winner-active .score-box {
-  background: var(--fire);
-  color: #fff;
-}
-.unresolved {
-  opacity: 0.5;
-  border-style: dashed;
-}
-</style>
-</head>
-<body>
-
-  <div class="controls-panel">
-    <button class="ctrl-btn" onclick="zoomCanvas(0.15)">Zoom +</button>
-    <button class="ctrl-btn" onclick="zoomCanvas(-0.15)">Zoom -</button>
-    <button class="ctrl-btn" onclick="resetCanvas()">Centrar</button>
-  </div>
-
-  <div class="canvas-container" id="canvas-container">
-    <div class="viewport-transform" id="viewport-transform">
-      </div>
-  </div>
-
-<script>
-// Base de datos reducida para simulación lineal
-const QUINIELA_DATA = [
-  { id:73, phase:'dieciseisavos', nextId:89, slot:'home', home:'Sudáfrica', homeFlag:'🇿🇦', away:'Canadá', awayFlag:'🇨🇦', homeScore:null, awayScore:null },
-  { id:74, phase:'dieciseisavos', nextId:89, slot:'away', home:'Alemania', homeFlag:'🇩🇪', away:'Paraguay', awayFlag:'🇵🇾', homeScore:null, awayScore:null },
-  { id:89, phase:'octavos', nextId:97, slot:'home', home:'Por definir', homeFlag:'⭐', away:'Por definir', awayFlag:'⭐', homeScore:null, awayScore:null },
-  { id:97, phase:'cuartos', nextId:101, slot:'home', home:'Ganador M89', homeFlag:'⚽', away:'Ganador M90', awayFlag:'⚽', homeScore:null, awayScore:null },
-  { id:101, phase:'semis', nextId:104, slot:'home', home:'Ganador M97', homeFlag:'⚽', away:'Ganador M98', awayFlag:'⚽', homeScore:null, awayScore:null },
-  { id:104, phase:'final', nextId:null, slot:null, home:'Finalista 1', homeFlag:'🌎', away:'Finalista 2', awayFlag:'🌎', homeScore:null, awayScore:null }
-];
-
-let currentZoom = 0.9;
-
-function renderPrototype() {
-  const container = document.getElementById('viewport-transform');
-  const phases = ['dieciseisavos', 'octavos', 'cuartos', 'semis', 'final'];
-  let html = '';
-
-  phases.forEach(p => {
-    let matches = QUINIELA_DATA.filter(m => m.phase === p);
-    if(matches.length === 0) return;
-    html += `<div class="bracket-column"><div class="column-title">${p}</div>`;
-    matches.forEach(m => {
-      const isHomeWin = m.homeScore > m.awayScore;
-      const isAwayWin = m.awayScore > m.homeScore;
-      html += `
-        <div class="match-node">
-          <div class="node-header"><span class="node-id">M${m.id}</span></div>
-          <div class="team-row ${isHomeWin ? 'winner-active' : ''}" onclick="selectWinner(${m.id}, 'home')">
-            <span>${m.homeFlag} ${m.home}</span><span class="score-box">${m.homeScore !== null ? m.homeScore : '—'}</span>
-          </div>
-          <div class="team-row ${isAwayWin ? 'winner-active' : ''}" onclick="selectWinner(${m.id}, 'away')">
-            <span>${m.awayFlag} ${m.away}</span><span class="score-box">${m.awayScore !== null ? m.awayScore : '—'}</span>
-          </div>
-        </div>`;
-    });
-    html += `</div>`;
-  });
-  container.innerHTML = html;
-  container.style.transform = `scale(${currentZoom})`;
-}
-
-function selectWinner(matchId, side) {
-  const match = QUINIELA_DATA.find(m => m.id === matchId);
-  if(!match || match.home.includes('Ganador') || match.home.includes('Por definir')) return;
-
-  if(side === 'home') { match.homeScore = 1; match.awayScore = 0; } 
-  else { match.homeScore = 0; match.awayScore = 1; }
-
-  const winner = side === 'home' ? match.home : match.away;
-  const flag = side === 'home' ? match.homeFlag : match.awayFlag;
-
-  if(match.nextId) {
-    const nextMatch = QUINIELA_DATA.find(m => m.id === match.nextId);
-    if(nextMatch) {
-      if(match.slot === 'home') { nextMatch.home = winner; nextMatch.homeFlag = flag; } 
-      else { nextMatch.away = winner; nextMatch.awayFlag = flag; }
-    }
-  }
-  renderPrototype();
-}
-
-function zoomCanvas(v) { currentZoom = Math.min(Math.max(0.4, currentZoom + v), 1.8); renderPrototype(); }
-function resetCanvas() { currentZoom = 0.9; renderPrototype(); }
-
-// MOTOR DE ARRASTRE (DRAG TO SCROLL) PARA TOUCH Y MOUSE
-const slider = document.getElementById('canvas-container');
-let isDown = false; let startX, startY, scrollLeft, scrollTop;
-
-const startDrag = (e) => {
-  isDown = true;
-  const pageX = e.pageX || e.touches[0].pageX;
-  const pageY = e.pageY || e.touches[0].pageY;
-  startX = pageX - slider.offsetLeft;
-  startY = pageY - slider.offsetTop;
-  scrollLeft = slider.scrollLeft;
-  scrollTop = slider.scrollTop;
-};
-const stopDrag = () => isDown = false;
-const moveDrag = (e) => {
-  if(!isDown) return;
-  e.preventDefault();
-  const pageX = e.pageX || e.touches[0].pageX;
-  const pageY = e.pageY || e.touches[0].pageY;
-  const x = pageX - slider.offsetLeft;
-  const y = pageY - slider.offsetTop;
-  slider.scrollLeft = scrollLeft - (x - startX) * 1.5;
-  slider.scrollTop = scrollTop - (y - startY) * 1.5;
-};
-
-slider.addEventListener('mousedown', startDrag);
-slider.addEventListener('mouseleave', stopDrag);
-slider.addEventListener('mouseup', stopDrag);
-slider.addEventListener('mousemove', moveDrag);
-slider.addEventListener('touchstart', startDrag);
-slider.addEventListener('touchend', stopDrag);
-slider.addEventListener('touchmove', moveDrag);
-
-renderPrototype();
-</script>
-</body>
-</html>
