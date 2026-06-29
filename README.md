@@ -38,11 +38,12 @@ body {
   padding-bottom: 10px;
 }
 .header-section h1 {
-  font-size: 42px;
+  font-size: 38px;
   font-weight: 900;
   text-transform: uppercase;
   margin: 0;
   line-height: 1;
+  white-space: nowrap; /* Fuerza un solo renglón */
 }
 .header-section h1 span { color: var(--fire); }
 .header-section p {
@@ -54,7 +55,7 @@ body {
   letter-spacing: 0.08em;
 }
 
-/* ── ONBOARDING INTERACTIVO CON DESVANECIMIENTO ── */
+/* ── ONBOARDING INTERACTIVO ── */
 .onboarding-overlay {
   position: fixed;
   top: 0;
@@ -70,7 +71,7 @@ body {
   color: #fff;
   text-align: center;
   opacity: 1;
-  transition: opacity 0.6s cubic-bezier(0.25, 1, 0.5, 1), pointer-events 0.6s;
+  transition: opacity 0.5s ease-out, pointer-events 0.5s;
   padding: 20px;
 }
 .onboarding-overlay.hidden {
@@ -84,25 +85,23 @@ body {
   display: inline-block;
 }
 @keyframes pulseFinger {
-  0%, 100% { transform: scale(1) rotate(0deg); opacity: 1; }
-  50% { transform: scale(0.8) rotate(-5deg); opacity: 0.5; }
+  0%, 100 { transform: scale(1); opacity: 1; }
+  50 { transform: scale(0.8); opacity: 0.5; }
 }
 .onboarding-title { 
   font-size: 26px; 
   font-weight: 900; 
   text-transform: uppercase;
   margin: 0 0 10px 0;
-  letter-spacing: 0.05em;
 }
 .onboarding-desc {
   font-size: 14px;
   max-width: 290px;
   line-height: 1.5;
   opacity: 0.8;
-  margin: 0;
 }
 
-/* ── CONTENEDOR CANVAS OPTIMIZADO PARA LIENZO MÓVIL VERTICAL ── */
+/* ── CONTENEDOR INTERACTIVO EN FORMATO VERTICAL ── */
 .canvas-frame-container {
   width: 100%;
   height: 72vh;
@@ -113,7 +112,7 @@ body {
   position: relative;
   cursor: grab;
   border-radius: 4px;
-  touch-action: none; /* Bloquea el scroll nativo para el paneo controlado */
+  touch-action: none;
 }
 .canvas-frame-container:active {
   cursor: grabbing;
@@ -123,7 +122,7 @@ body {
   padding: 40px;
   transform-origin: top left;
   display: grid;
-  grid-template-columns: repeat(6, 265px); /* 6 Columnas: Dieciseisavos a Final */
+  grid-template-columns: repeat(6, 265px);
   gap: 35px;
   width: max-content;
   min-height: 100%;
@@ -147,10 +146,9 @@ body {
   transform: rotate(-1.5deg);
   box-shadow: 3px 3px 0 var(--fire);
   margin-bottom: 20px;
-  letter-spacing: 0.05em;
 }
 
-/* ── TARJETAS ELIMINATORIAS DE QUINIELA ── */
+/* ── NODOS ELIMINATORIOS ── */
 .match-node-block {
   background: var(--white);
   border: 2.5px solid var(--ink);
@@ -158,7 +156,6 @@ body {
   padding: 8px 10px;
   box-shadow: 4px 4px 0 var(--ink);
   margin: 14px 0;
-  position: relative;
 }
 .node-info-row {
   display: flex;
@@ -203,15 +200,28 @@ body {
 .score-box-display {
   font-family: var(--font-mono);
   background: var(--bg3);
-  padding: 1px 6px;
+  padding: 2px 6px;
   font-size: 11px;
   border-radius: 2px;
   color: var(--ink);
-  font-weight: 700;
+  font-weight: 900;
 }
 .team-selectable-row.selected-winner .score-box-display {
   background: var(--fire);
   color: #fff;
+}
+.fav-badge {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--fire);
+  font-weight: bold;
+  background: var(--fire-light);
+  padding: 1px 4px;
+  border-radius: 2px;
+}
+.team-selectable-row.selected-winner .fav-badge {
+  color: var(--white);
+  background: rgba(255,255,255,0.2);
 }
 .unresolved-node {
   opacity: 0.55;
@@ -219,27 +229,32 @@ body {
   box-shadow: none;
 }
 .unresolved-node .team-selectable-row {
-  font-style: italic;
+  color: var(--ink3);
   font-weight: 500;
 }
 
-.action-bar {
-  margin-bottom: 15px;
+/* ── BOTONERA PANEL ── */
+.bracket-controls-panel {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
 }
-.center-btn {
+.bracket-ctrl-btn {
+  font-family: var(--font-display);
   font-weight: 900;
-  font-size: 13px;
+  font-size: 12px;
+  letter-spacing: .04em;
   text-transform: uppercase;
   background: var(--ink);
   color: #fff;
   border: none;
-  padding: 10px 18px;
+  padding: 8px 14px;
   cursor: pointer;
-  box-shadow: 3px 3px 0 var(--fire);
-  transition: transform 0.05s;
+  box-shadow: 2px 2px 0 var(--fire);
 }
-.center-btn:active {
-  transform: translate(2px, 2px);
+.bracket-ctrl-btn:active {
+  transform: translate(1px, 1px);
   box-shadow: 1px 1px 0 var(--fire);
 }
 </style>
@@ -247,9 +262,9 @@ body {
 <body>
 
 <div class="onboarding-overlay" id="onboarding-screen" onclick="closeOnboarding()">
-  <div class="pinch-icon\">✌️</div>
+  <div class="pinch-icon">✌️</div>
   <div class="onboarding-title">Pellizca para hacer Zoom</div>
-  <div class="onboarding-desc">Usa dos dedos en tu pantalla móvil para ajustar el tamaño del cuadro y arrastra en cualquier dirección para navegar libremente.</div>
+  <div class="onboarding-desc">Usa dos dedos para ajustar el tamaño del mapa. Arrastra en cualquier dirección para moverte libremente por las fases de tu quiniela.</div>
 </div>
 
 <div class="header-section">
@@ -257,8 +272,9 @@ body {
   <p>El mundial es ahora</p>
 </div>
 
-<div class="action-bar">
-  <button class="center-btn" onclick="resetCanvasView()">Centrar Mapa</button>
+<div class="bracket-controls-panel">
+  <button class="bracket-ctrl-btn" onclick="toggleFullscreenCanvas()">Pantalla Completa 📸</button>
+  <button class="bracket-ctrl-btn" style="background:var(--fire-dark);" onclick="resetUserQuiniela()">Reiniciar Quiniela 🔄</button>
 </div>
 
 <div class="canvas-frame-container" id="canvas-container-scroll">
@@ -267,97 +283,103 @@ body {
 </div>
 
 <script>
-// Base de datos completa con las 6 fases de la eliminación directa
 const SIMULATOR_DATA = [
-  // ── DIECISEISAVOS DE FINAL (16 Partidos)
-  { id:73, phase:'dieciseisavos', nextId:89, slot:'home', home:'Sudáfrica', flag:'🇿🇦', away:'Canadá', flagAway:'🇨🇦', homeScore:null, awayScore:null, date:'28 Jun' },
-  { id:74, phase:'dieciseisavos', nextId:89, slot:'away', home:'Alemania', flag:'🇩🇪', away:'Paraguay', flagAway:'🇵🇾', homeScore:null, awayScore:null, date:'29 Jun' },
-  { id:75, phase:'dieciseisavos', nextId:90, slot:'home', home:'Países Bajos', flag:'🇳🇱', away:'Marruecos', flagAway:'🇲🇦', homeScore:null, awayScore:null, date:'29 Jun' },
-  { id:76, phase:'dieciseisavos', nextId:90, slot:'away', home:'Brasil', flag:'🇧🇷', away:'Japón', flagAway:'🇯🇵', homeScore:null, awayScore:null, date:'29 Jun' },
-  { id:77, phase:'dieciseisavos', nextId:91, slot:'home', home:'Francia', flag:'🇫🇷', away:'Suecia', flagAway:'🇸🇪', homeScore:null, awayScore:null, date:'30 Jun' },
-  { id:78, phase:'dieciseisavos', nextId:91, slot:'away', home:'Costa de Marfil', flag:'🇨🇮', away:'Noruega', flagAway:'🇳🇴', homeScore:null, awayScore:null, date:'30 Jun' },
-  { id:79, phase:'dieciseisavos', nextId:92, slot:'home', home:'México', flag:'🇲🇽', away:'Ecuador', flagAway:'🇪🇨', homeScore:null, awayScore:null, date:'30 Jun' },
-  { id:80, phase:'dieciseisavos', nextId:92, slot:'away', home:'Inglaterra', flag:'🏴\u200d󠁢󠁥󠁮󠁧󠁿', away:'RD Congo', flagAway:'🇨🇩', homeScore:null, awayScore:null, date:'01 Jul' },
-  { id:81, phase:'dieciseisavos', nextId:93, slot:'home', home:'Estados Unidos', flag:'🇺🇸', away:'Bosnia', flagAway:'🇧🇦', homeScore:null, awayScore:null, date:'01 Jul' },
-  { id:82, phase:'dieciseisavos', nextId:93, slot:'away', home:'Bélgica', flag:'🇧🇪', away:'Senegal', flagAway:'🇸🇳', homeScore:null, awayScore:null, date:'01 Jul' },
-  { id:83, phase:'dieciseisavos', nextId:94, slot:'home', home:'Portugal', flag:'🇵🇹', away:'Croacia', flagAway:'🇭🇷', homeScore:null, awayScore:null, date:'02 Jul' },
-  { id:84, phase:'dieciseisavos', nextId:94, slot:'away', home:'España', flag:'🇪🇸', away:'Austria', flagAway:'🇦🇹', homeScore:null, awayScore:null, date:'02 Jul' },
-  { id:85, phase:'dieciseisavos', nextId:95, slot:'home', home:'Suiza', flag:'🇨🇭', away:'Argelia', flagAway:'🇩🇿', homeScore:null, awayScore:null, date:'02 Jul' },
-  { id:86, phase:'dieciseisavos', nextId:95, slot:'away', home:'Argentina', flag:'🇦🇷', away:'Cabo Verde', flagAway:'🇨🇻', homeScore:null, awayScore:null, date:'03 Jul' },
-  { id:87, phase:'dieciseisavos', nextId:96, slot:'home', home:'Colombia', flag:'🇨🇴', away:'Ghana', flagAway:'🇬🇭', homeScore:null, awayScore:null, date:'03 Jul' },
-  { id:88, phase:'dieciseisavos', nextId:96, slot:'away', home:'Australia', flag:'🇦🇺', away:'Egipto', flagAway:'🇪🇬', homeScore:null, awayScore:null, date:'03 Jul' },
+  // ── DIECISEISAVOS DE FINAL
+  { id:73, phase:'dieciseisavos', nextId:89, slot:'home', home:'Sudáfrica', flag:'🇿🇦', away:'Canadá', flagAway:'🇨🇦', homeScore:0, awayScore:1, status:'done', date:'28 Jun' },
+  { id:74, phase:'dieciseisavos', nextId:89, slot:'away', home:'Alemania', flag:'🇩🇪', fav:'75%', away:'Paraguay', flagAway:'🇵🇾', homeScore:null, awayScore:null, status:'scheduled', date:'29 Jun' },
+  { id:75, phase:'dieciseisavos', nextId:90, slot:'home', home:'Países Bajos', flag:'🇳🇱', fav:'50%', away:'Marruecos', flagAway:'🇲🇦', homeScore:null, awayScore:null, status:'scheduled', date:'29 Jun' },
+  { id:76, phase:'dieciseisavos', nextId:90, slot:'away', home:'Brasil', flag:'🇧🇷', fav:'65%', away:'Japón', flagAway:'🇯🇵', homeScore:null, awayScore:null, status:'scheduled', date:'29 Jun' },
+  { id:77, phase:'dieciseisavos', nextId:91, slot:'home', home:'Francia', flag:'🇫🇷', fav:'80%', away:'Suecia', flagAway:'🇸🇪', homeScore:null, awayScore:null, status:'scheduled', date:'30 Jun' },
+  { id:78, phase:'dieciseisavos', nextId:91, slot:'away', home:'Costa de Marfil', flag:'🇨🇮', away:'Noruega', flagAway:'🇳🇴', favAway:'56%', homeScore:null, awayScore:null, status:'scheduled', date:'30 Jun' },
+  { id:79, phase:'dieciseisavos', nextId:92, slot:'home', home:'México', flag:'🇲🇽', fav:'51%', away:'Ecuador', flagAway:'🇪🇨', homeScore:null, awayScore:null, status:'scheduled', date:'30 Jun' },
+  { id:80, phase:'dieciseisavos', nextId:92, slot:'away', home:'Inglaterra', flag:'🏴\u200d󠁢󠁥󠁮󠁧󠁿', fav:'75-80%', away:'RD Congo', flagAway:'🇨🇩', homeScore:null, awayScore:null, status:'scheduled', date:'01 Jul' },
+  { id:81, phase:'dieciseisavos', nextId:93, slot:'home', home:'Estados Unidos', flag:'🇺🇸', fav:'65-70%', away:'Bosnia', flagAway:'🇧🇦', homeScore:null, awayScore:null, status:'scheduled', date:'01 Jul' },
+  { id:82, phase:'dieciseisavos', nextId:93, slot:'away', home:'Bélgica', flag:'🇧🇪', fav:'40-45%', away:'Senegal', flagAway:'🇸🇳', homeScore:null, awayScore:null, status:'scheduled', date:'01 Jul' },
+  { id:83, phase:'dieciseisavos', nextId:94, slot:'home', home:'Portugal', flag:'🇵🇹', fav:'60%', away:'Croacia', flagAway:'🇭🇷', homeScore:null, awayScore:null, status:'scheduled', date:'02 Jul' },
+  { id:84, phase:'dieciseisavos', nextId:94, slot:'away', home:'España', flag:'🇪🇸', fav:'80%', away:'Austria', flagAway:'🇦🇹', homeScore:null, awayScore:null, status:'scheduled', date:'02 Jul' },
+  { id:85, phase:'dieciseisavos', nextId:95, slot:'home', home:'Suiza', flag:'🇨🇭', fav:'55%', away:'Argelia', flagAway:'🇩🇿', homeScore:null, awayScore:null, status:'scheduled', date:'02 Jul' },
+  { id:86, phase:'dieciseisavos', nextId:95, slot:'away', home:'Argentina', flag:'🇦🇷', fav:'90%', away:'Cabo Verde', flagAway:'🇨🇻', homeScore:null, awayScore:null, status:'scheduled', date:'03 Jul' },
+  { id:87, phase:'dieciseisavos', nextId:96, slot:'home', home:'Colombia', flag:'🇨🇴', fav:'70%', away:'Ghana', flagAway:'🇬🇭', homeScore:null, awayScore:null, status:'scheduled', date:'03 Jul' },
+  { id:88, phase:'dieciseisavos', nextId:96, slot:'away', home:'Australia', flag:'🇦🇺', away:'Egipto', flagAway:'🇪🇬', favAway:'45%', homeScore:null, awayScore:null, status:'scheduled', date:'03 Jul' },
   
-  // ── OCTAVOS DE FINAL (8 Partidos)
-  { id:89, phase:'octavos', nextId:97, slot:'home', home:'Por definir', homeFlag:'⭐', away:'Por definir', awayFlag:'⭐', homeScore:null, awayScore:null, date:'04 Jul' },
-  { id:90, phase:'octavos', nextId:97, slot:'away', home:'Por definir', homeFlag:'⭐', away:'Por definir', awayFlag:'⭐', homeScore:null, awayScore:null, date:'04 Jul' },
-  { id:91, phase:'octavos', nextId:98, slot:'home', home:'Por definir', homeFlag:'⭐', away:'Por definir', awayFlag:'⭐', homeScore:null, awayScore:null, date:'05 Jul' },
-  { id:92, phase:'octavos', nextId:98, slot:'away', home:'Por definir', homeFlag:'⭐', away:'Por definir', awayFlag:'⭐', homeScore:null, awayScore:null, date:'05 Jul' },
-  { id:93, phase:'octavos', nextId:99, slot:'home', home:'Por definir', homeFlag:'⭐', away:'Por definir', awayFlag:'⭐', homeScore:null, awayScore:null, date:'06 Jul' },
-  { id:94, phase:'octavos', nextId:99, slot:'away', home:'Por definir', homeFlag:'⭐', away:'Por definir', awayFlag:'⭐', homeScore:null, awayScore:null, date:'06 Jul' },
-  { id:95, phase:'octavos', nextId:100, slot:'home', home:'Por definir', homeFlag:'⭐', away:'Por definir', awayFlag:'⭐', homeScore:null, awayScore:null, date:'07 Jul' },
-  { id:96, phase:'octavos', nextId:100, slot:'away', home:'Por definir', homeFlag:'⭐', away:'Por definir', awayFlag:'⭐', homeScore:null, awayScore:null, date:'07 Jul' },
+  // ── OCTAVOS DE FINAL
+  { id:89, phase:'octavos', nextId:97, slot:'home', home:'Canadá', homeFlag:'🇨🇦', away:'Por definir', awayFlag:'⭐', homeScore:null, awayScore:null, status:'scheduled', date:'04 Jul' },
+  { id:90, phase:'octavos', nextId:97, slot:'away', home:'Por definir', homeFlag:'⭐', away:'Por definir', awayFlag:'⭐', homeScore:null, awayScore:null, status:'scheduled', date:'04 Jul' },
+  { id:91, phase:'octavos', nextId:98, slot:'home', home:'Por definir', homeFlag:'⭐', away:'Por definir', awayFlag:'⭐', homeScore:null, awayScore:null, status:'scheduled', date:'05 Jul' },
+  { id:92, phase:'octavos', nextId:98, slot:'away', home:'Por definir', homeFlag:'⭐', away:'Por definir', awayFlag:'⭐', homeScore:null, awayScore:null, status:'scheduled', date:'05 Jul' },
+  { id:93, phase:'octavos', nextId:99, slot:'home', home:'Por definir', homeFlag:'⭐', away:'Por definir', awayFlag:'⭐', homeScore:null, awayScore:null, status:'scheduled', date:'06 Jul' },
+  { id:94, phase:'octavos', nextId:99, slot:'away', home:'Por definir', homeFlag:'⭐', away:'Por definir', awayFlag:'⭐', homeScore:null, awayScore:null, status:'scheduled', date:'06 Jul' },
+  { id:95, phase:'octavos', nextId:100, slot:'home', home:'Por definir', homeFlag:'⭐', away:'Por definir', awayFlag:'⭐', homeScore:null, awayScore:null, status:'scheduled', date:'07 Jul' },
+  { id:96, phase:'octavos', nextId:100, slot:'away', home:'Por definir', homeFlag:'⭐', away:'Por definir', awayFlag:'⭐', homeScore:null, awayScore:null, status:'scheduled', date:'07 Jul' },
   
-  // ── CUARTOS DE FINAL (4 Partidos)
-  { id:97, phase:'cuartos', nextId:101, slot:'home', home:'Ganador M89', homeFlag:'⚽', away:'Ganador M90', awayFlag:'⚽', homeScore:null, awayScore:null, date:'09 Jul' },
-  { id:98, phase:'cuartos', nextId:101, slot:'away', home:'Ganador M91', homeFlag:'⚽', away:'Ganador M92', awayFlag:'⚽', homeScore:null, awayScore:null, date:'10 Jul' },
-  { id:99, phase:'cuartos', nextId:102, slot:'home', home:'Ganador M93', homeFlag:'⚽', away:'Ganador M94', awayFlag:'⚽', homeScore:null, awayScore:null, date:'11 Jul' },
-  { id:100, phase:'cuartos', nextId:102, slot:'away', home:'Ganador M95', homeFlag:'⚽', away:'Ganador M96', awayFlag:'⚽', homeScore:null, awayScore:null, date:'11 Jul' },
+  // ── CUARTOS DE FINAL
+  { id:97, phase:'cuartos', nextId:101, slot:'home', home:'Ganador M89', homeFlag:'⚽', away:'Ganador M90', awayFlag:'⚽', homeScore:null, awayScore:null, status:'scheduled', date:'09 Jul' },
+  { id:98, phase:'cuartos', nextId:101, slot:'away', home:'Ganador M91', homeFlag:'⚽', away:'Ganador M92', awayFlag:'⚽', homeScore:null, awayScore:null, status:'scheduled', date:'10 Jul' },
+  { id:99, phase:'cuartos', nextId:102, slot:'home', home:'Ganador M93', homeFlag:'⚽', away:'Ganador M94', awayFlag:'⚽', homeScore:null, awayScore:null, status:'scheduled', date:'11 Jul' },
+  { id:100, phase:'cuartos', nextId:102, slot:'away', home:'Ganador M95', homeFlag:'⚽', away:'Ganador M96', awayFlag:'⚽', homeScore:null, awayScore:null, status:'scheduled', date:'11 Jul' },
   
-  // ── SEMIFINALES (2 Partidos)
-  { id:101, phase:'semis', nextId:104, slot:'home', home:'Ganador Cuartos 1', homeFlag:'⚽', away:'Ganador Cuartos 2', awayFlag:'⚽', homeScore:null, awayScore:null, date:'14 Jul' },
-  { id:102, phase:'semis', nextId:104, slot:'away', home:'Ganador Cuartos 3', homeFlag:'⚽', away:'Ganador Cuartos 4', awayFlag:'⚽', homeScore:null, awayScore:null, date:'15 Jul' },
+  // ── SEMIFINALES
+  { id:101, phase:'semis', nextId:104, slot:'home', home:'Ganador Semis 1', homeFlag:'⚽', away:'Ganador Semis 2', awayFlag:'⚽', homeScore:null, awayScore:null, status:'scheduled', date:'14 Jul' },
+  { id:102, phase:'semis', nextId:104, slot:'away', home:'Ganador Semis 3', homeFlag:'⚽', away:'Ganador Semis 4', awayFlag:'⚽', homeScore:null, awayScore:null, status:'scheduled', date:'15 Jul' },
   
-  // ── TERCER LUGAR (1 Partido)
-  { id:103, phase:'tercer-lugar', nextId:null, slot:null, home:'Perdedor Semi 1', homeFlag:'🥉', away:'Perdedor Semi 2', awayFlag:'🥉', homeScore:null, awayScore:null, date:'18 Jul' },
-  
-  // ── GRAN FINAL (1 Partido)
-  { id:104, phase:'final', nextId:null, slot:null, home:'Finalista 1', homeFlag:'🌍', away:'Finalista 2', awayFlag:'🌍', homeScore:null, awayScore:null, date:'19 Jul' }
+  // ── TERCER LUGAR Y FINAL
+  { id:103, phase:'tercer-lugar', nextId:null, slot:null, home:'Perdedor Semi 1', homeFlag:'🥉', away:'Perdedor Semi 2', awayFlag:'🥉', homeScore:null, awayScore:null, status:'scheduled', date:'18 Jul' },
+  { id:104, phase:'final', nextId:null, slot:null, home:'Finalista 1', homeFlag:'🌍', away:'Finalista 2', awayFlag:'🌍', homeScore:null, awayScore:null, status:'scheduled', date:'19 Jul' }
 ];
 
-let globalZoom = 0.65; // Zoom idóneo preestablecido para visualización vertical
+let currentScale = 0.65;
 
 function closeOnboarding() {
   document.getElementById('onboarding-screen').classList.add('hidden');
 }
-setTimeout(closeOnboarding, 3200); // Se desvanece de forma automatizada a los 3 segundos
+setTimeout(closeOnboarding, 2800);
 
 function render() {
   const container = document.getElementById('render-viewport-area');
-  const rounds = ['dieciseisavos', 'octavos', 'cuartos', 'semis', 'tercer-lugar', 'final'];
+  const phases = ['dieciseisavos', 'octavos', 'cuartos', 'semis', 'tercer-lugar', 'final'];
   let html = '';
 
-  rounds.forEach(r => {
-    let list = SIMULATOR_DATA.filter(m => m.phase === r);
-    let roundTitle = r === 'tercer-lugar' ? 'Tercer Lugar' : r === 'semis' ? 'Semifinal' : r;
-    html += `<div class="bracket-column"><div class="bracket-column-title">${roundTitle}</div>`;
+  phases.forEach(p => {
+    let list = SIMULATOR_DATA.filter(m => m.phase === p);
+    let title = p === 'tercer-lugar' ? 'Tercer Lugar' : p === 'semis' ? 'Semifinal' : p;
+    html += `<div class="bracket-column"><div class="bracket-column-title">${title}</div>`;
     
     list.forEach(m => {
-      const isDone = m.homeScore !== null;
+      const isDone = m.status === 'done';
       const isHomeWin = isDone && m.homeScore > m.awayScore;
       const isAwayWin = isDone && m.awayScore > m.homeScore;
       const isPlaceholder = m.home.includes('Por definir') || m.home.includes('Ganador') || m.home.includes('Finalista') || m.home.includes('Perdedor');
 
+      // Formatear insignias de favorito si existen y el partido está pendiente
+      const favHomeHTML = (m.fav && !isDone) ? `<span class="fav-badge">${m.fav}</span>` : '';
+      const favAwayHTML = (m.favAway && !isDone) ? `<span class="fav-badge">${m.favAway}</span>` : '';
+
       html += `
         <div class="bracket-match-node ${isPlaceholder ? 'unresolved-node' : ''}">
           <div class="node-info-row"><span class="node-match-id">M${m.id}</span><span>${m.date}</span></div>
-          <div class="team-selectable-row ${isHomeWin ? 'selected-winner' : ''}" onclick="advanceQuinielaTeam(${m.id}, 'home')">
-            <span>${m.flag} ${m.home}</span><span class="score-box-display">${m.homeScore !== null ? m.homeScore : '—'}</span>
+          <div class="team-selectable-row ${isHomeWin ? 'selected-winner' : ''}" onclick="advanceTeam(${m.id}, 'home')">
+            <span>${m.flag || '⭐'} ${m.home} ${favHomeHTML}</span>
+            <span class="score-box-display">${m.homeScore !== null ? m.homeScore : '—'}</span>
           </div>
-          <div class="team-selectable-row ${isAwayWin ? 'selected-winner' : ''}" onclick="advanceQuinielaTeam(${m.id}, 'away')">
-            <span>${m.flagAway} ${m.away}</span><span class="score-box-display">${m.awayScore !== null ? m.awayScore : '—'}</span>
+          <div class="team-selectable-row ${isAwayWin ? 'selected-winner' : ''}" onclick="advanceTeam(${m.id}, 'away')">
+            <span>${m.flagAway || '⭐'} ${m.away} ${favAwayHTML}</span>
+            <span class="score-box-display">${m.awayScore !== null ? m.awayScore : '—'}</span>
           </div>
         </div>`;
     });
     html += `</div>`;
   });
   container.innerHTML = html;
-  container.style.transform = `scale(${globalZoom})`;
+  container.style.transform = `scale(${currentScale})`;
 }
 
-function advanceQuinielaTeam(matchId, side) {
+function advanceTeam(matchId, side) {
+  // Evitar tocar el partido de Canadá (ID 73) ya resuelto o nodos vacíos
+  if(matchId === 73) return;
   const m = SIMULATOR_DATA.find(x => x.id === matchId);
-  if(!m || m.home.includes('Por definir') || m.home.includes('Ganador') || m.home.includes('Finalista') || m.home.includes('Perdedor')) return;
+  if(!m || m.home.includes('Por definir') || m.home.includes('Ganador') || m.home.includes('Finalista')) return;
 
+  m.status = 'done';
   m.homeScore = side === 'home' ? 1 : 0;
   m.awayScore = side === 'home' ? 0 : 1;
 
@@ -379,45 +401,68 @@ function advanceQuinielaTeam(matchId, side) {
   } else if(m.nextId) {
     const next = SIMULATOR_DATA.find(x => x.id === m.nextId);
     if(next) {
-      if(m.slot === 'home') { next.home = winnerName; next.flag = winnerFlag; }
-      else { next.away = winnerName; next.flagAway = winnerFlag; }
+      if(m.slot === 'home') { next.home = winnerName; next.homeFlag = winnerFlag; }
+      else { next.away = winnerName; next.awayFlag = winnerFlag; }
     }
   }
   render();
 }
 
-function resetCanvasView() { globalZoom = 0.65; render(); }
+function resetUserQuiniela() {
+  SIMULATOR_DATA.forEach(m => {
+    if(m.id !== 73) { // Respetar y no tocar el juego de Canadá
+      m.homeScore = null;
+      m.awayScore = null;
+      m.status = 'scheduled';
+      if(m.id >= 89) {
+        m.home = m.id === 89 ? 'Canadá' : m.phase === 'octavos' ? 'Por definir' : 'Ganador M';
+        m.homeFlag = m.id === 89 ? '🇨🇦' : '⭐';
+        m.away = m.phase === 'octavos' ? 'Por definir' : 'Ganador M';
+        m.awayFlag = '⭐';
+      }
+    }
+  });
+  render();
+}
 
-// CONTROLADOR DE PANEO EN DISPOSITIVOS TÁCTILES Y MOUSE MÓVIL
-const trackScroll = document.getElementById('canvas-container-scroll');
-let activeDrag = false; let startX, startY, sLeft, sTop;
+function toggleFullscreenCanvas() {
+  const el = document.getElementById('canvas-container-scroll');
+  if (!document.fullscreenElement) {
+    el.requestFullscreen().catch(err => {
+      alert(`Error al activar pantalla completa: ${err.message}`);
+    });
+  } else {
+    document.exitFullscreen();
+  }
+}
 
-const onStart = (e) => {
-  activeDrag = true;
+// ── SISTEMA DE DESPLAZAMIENTO TÁCTIL (PANEÓ) ──
+const frame = document.getElementById('canvas-container-scroll');
+let isDragging = false; let sx, sy, sLeft, sTop;
+
+const startPan = (e) => {
+  isDragging = true;
   const x = e.pageX || e.touches[0].pageX;
   const y = e.pageY || e.touches[0].pageY;
-  startX = x - trackScroll.offsetLeft;
-  startY = y - trackScroll.offsetTop;
-  sLeft = trackScroll.scrollLeft; sTop = trackScroll.scrollTop;
+  sx = x - frame.offsetLeft;
+  sy = y - frame.offsetTop;
+  sLeft = frame.scrollLeft; sTop = frame.scrollTop;
 };
-trackScroll.addEventListener('mousedown', onStart);
-trackScroll.addEventListener('touchstart', onStart);
-trackScroll.addEventListener('mousemove', (e) => {
-  if(!activeDrag) return;
-  const x = e.pageX - trackScroll.offsetLeft;
-  const y = e.pageY - trackScroll.offsetTop;
-  trackScroll.scrollLeft = sLeft - (x - startX) * 1.5;
-  trackScroll.scrollTop = sTop - (y - startY) * 1.5;
-});
-trackScroll.addEventListener('touchmove', (e) => {
-  if(!activeDrag) return;
-  const x = e.touches[0].pageX - trackScroll.offsetLeft;
-  const y = e.touches[0].pageY - trackScroll.offsetTop;
-  trackScroll.scrollLeft = sLeft - (x - startX) * 1.5;
-  trackScroll.scrollTop = sTop - (y - startY) * 1.5;
-});
-window.addEventListener('mouseup', () => activeDrag = false);
-trackScroll.addEventListener('touchend', () => activeDrag = false);
+frame.addEventListener('mousedown', startPan);
+frame.addEventListener('touchstart', startPan);
+
+const movePan = (e) => {
+  if(!isDragging) return;
+  const x = e.pageX || e.touches[0].pageX;
+  const y = e.pageY || e.touches[0].pageY;
+  frame.scrollLeft = sLeft - (x - frame.offsetLeft - sx) * 1.4;
+  frame.scrollTop = sTop - (y - frame.offsetTop - sy) * 1.4;
+};
+frame.addEventListener('mousemove', movePan);
+frame.addEventListener('touchmove', movePan);
+
+window.addEventListener('mouseup', () => isDragging = false);
+frame.addEventListener('touchend', () => isDragging = false);
 
 render();
 </script>
